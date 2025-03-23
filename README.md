@@ -13,9 +13,9 @@ Each function in this microservice is responsible for a specific CRUD operation 
 - 🧩 Modular microservice design (1 Lambda = 1 route)
 - ⚙️ GitHub → CodePipeline → CodeBuild → SAM deployment
 - 🔍 AWS Lambda Powertools for:
-  - Structured JSON logs
-  - Custom CloudWatch metrics
-  - AWS X-Ray tracing with annotations and metadata
+  - Structured JSON logs  
+  - Custom CloudWatch metrics  
+  - AWS X-Ray tracing with annotations and metadata  
 - 🔐 Fine-grained IAM roles for Lambda + CodeBuild + CodePipeline
 - 🔁 DynamoDB for persistence with TTL and GSI support
 - 🌐 CORS-enabled API Gateway with custom headers for multi-user support
@@ -26,11 +26,11 @@ Each function in this microservice is responsible for a specific CRUD operation 
 
 You're building a serverless Notes API using AWS services. The goal is to:
 
-- Build, deploy, and test the app end-to-end
-- Automate CI/CD from GitHub to AWS using SAM, CodePipeline, and CodeBuild
-- Use Powertools for observability (structured logs, metrics, X-Ray traces)
-- Analyze logs with CloudWatch Logs Insights
-- Trace errors and performance bottlenecks using AWS X-Ray
+- Build, deploy, and test the app end-to-end  
+- Automate CI/CD from GitHub to AWS using SAM, CodePipeline, and CodeBuild  
+- Use Powertools for observability (structured logs, metrics, X-Ray traces)  
+- Analyze logs with CloudWatch Logs Insights  
+- Trace errors and performance bottlenecks using AWS X-Ray  
 
 ---
 
@@ -56,3 +56,21 @@ You're building a serverless Notes API using AWS services. The goal is to:
 - **AWS CodePipeline + CodeBuild**
 - **AWS Lambda Powertools for Node.js**
 - **Postman (for testing)**
+
+---
+
+## 🚀 Want More Real-World AWS Projects?
+
+This hands-on project is just one of many in the **Advanced Cloud Mastery Program (ACMP)** — a complete learning experience designed for IT professionals and cloud aspirants who want to:
+
+- Gain **real hands-on AWS experience**  
+- Build a **strong portfolio of end-to-end cloud projects**  
+- Get **certified** and land **cloud engineering roles in under 6 months**
+
+👉 [Learn more about ACMP and join the program »](https://needforcloud.com)
+
+---
+
+## License
+
+This project is licensed under the MIT License.
