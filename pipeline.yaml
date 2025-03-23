@@ -78,6 +78,9 @@ Resources:
                   - iam:AttachRolePolicy
                   - iam:PutRolePolicy
                   - iam:TagRole
+                  - iam:DeleteRolePolicy
+                  - iam:DeleteRole
+                  - iam:DetachRolePolicy
                 Resource: "*"
 
   CodeBuildProject:
