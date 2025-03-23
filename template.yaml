@@ -45,7 +45,7 @@ Resources:
     Properties:
       FunctionName: addNote
       CodeUri: notes-api/
-      Handler: functions/add-note.lambdaHandler
+      Handler: functions/add-note.mjs
       Runtime: nodejs22.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Events:
@@ -62,15 +62,6 @@ Resources:
               - method.request.header.App-User-Name:
                   Required: true
                   Caching: true
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Format: esm
-        Minify: true
-        Target: "ES2020"
-        EntryPoints:
-          - functions/add-note.mjs
-        Sourcemap: true
 
   UpdateNoteFunction:
     Type: AWS::Serverless::Function
@@ -94,15 +85,6 @@ Resources:
               - method.request.header.App-User-Name:
                   Required: true
                   Caching: true
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Format: esm
-        Minify: true
-        Target: "ES2020"
-        EntryPoints:
-          - functions/update-note.mjs
-        Sourcemap: true
 
   DeleteNoteFunction:
     Type: AWS::Serverless::Function
@@ -126,15 +108,6 @@ Resources:
               - method.request.header.App-User-Name:
                   Required: true
                   Caching: true
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Format: esm
-        Minify: true
-        Target: "ES2020"
-        EntryPoints:
-          - functions/delete-note.mjs
-        Sourcemap: true
 
   GetNoteFunction:
     Type: AWS::Serverless::Function
@@ -158,15 +131,6 @@ Resources:
               - method.request.header.App-User-Name:
                   Required: true
                   Caching: true
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Format: esm
-        Minify: true
-        Target: "ES2020"
-        EntryPoints:
-          - functions/get-note.mjs
-        Sourcemap: true
 
   GetNotesFunction:
     Type: AWS::Serverless::Function
@@ -190,15 +154,6 @@ Resources:
               - method.request.header.App-User-Name:
                   Required: true
                   Caching: true
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Format: esm
-        Minify: true
-        Target: "ES2020"
-        EntryPoints:
-          - functions/get-notes.mjs
-        Sourcemap: true
 
   NotesApi:
     Type: AWS::Serverless::Api

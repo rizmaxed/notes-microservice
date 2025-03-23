@@ -81,6 +81,9 @@ Resources:
                   - iam:DeleteRolePolicy
                   - iam:DeleteRole
                   - iam:DetachRolePolicy
+                  - iam:GetRole
+                  - iam:UpdateRole
+                  - iam:CreateServiceLinkedRole
                 Resource: "*"
 
   CodeBuildProject:
