@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 10
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        NOTES_TABLE: !Ref NotesTable
+
+Resources:
+  NotesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: NotesTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: ts
+          AttributeType: N
+        - AttributeName: note_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+        - AttributeName: ts
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: note_id-index
+          KeySchema:
+            - AttributeName: note_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      TimeToLiveSpecification:
+        AttributeName: "expires"
+        Enabled: true
+
+  AddNoteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: addNote
+      CodeUri: notes-api/
+      Handler: functions/add-note.lambdaHandler
+      Runtime: nodejs22.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Events:
+        AddNoteApi:
+          Type: Api
+          Properties:
+            Path: /note
+            Method: POST
+            RestApiId: !Ref NotesApi
+            RequestParameters:
+              - method.request.header.App-User-Id:
+                  Required: true
+                  Caching: true
+              - method.request.header.App-User-Name:
+                  Required: true
+                  Caching: true
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: true
+        Target: "ES2020"
+        EntryPoints:
+          - functions/add-note.mjs
+        Sourcemap: true
+
+  UpdateNoteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: updateNote
+      CodeUri: notes-api/
+      Handler: functions/update-note.lambdaHandler
+      Runtime: nodejs22.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Events:
+        UpdateNoteApi:
+          Type: Api
+          Properties:
+            Path: /note
+            Method: PATCH
+            RestApiId: !Ref NotesApi
+            RequestParameters:
+              - method.request.header.App-User-Id:
+                  Required: true
+                  Caching: true
+              - method.request.header.App-User-Name:
+                  Required: true
+                  Caching: true
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: true
+        Target: "ES2020"
+        EntryPoints:
+          - functions/update-note.mjs
+        Sourcemap: true
+
+  DeleteNoteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: deleteNote
+      CodeUri: notes-api/
+      Handler: functions/delete-note.lambdaHandler
+      Runtime: nodejs22.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Events:
+        DeleteNoteApi:
+          Type: Api
+          Properties:
+            Path: /note/t/{ts}
+            Method: DELETE
+            RestApiId: !Ref NotesApi
+            RequestParameters:
+              - method.request.header.App-User-Id:
+                  Required: true
+                  Caching: true
+              - method.request.header.App-User-Name:
+                  Required: true
+                  Caching: true
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: true
+        Target: "ES2020"
+        EntryPoints:
+          - functions/delete-note.mjs
+        Sourcemap: true
+
+  GetNoteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getNote
+      CodeUri: notes-api/
+      Handler: functions/get-note.lambdaHandler
+      Runtime: nodejs22.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Events:
+        GetNoteApi:
+          Type: Api
+          Properties:
+            Path: /note/n/{note_id}
+            Method: GET
+            RestApiId: !Ref NotesApi
+            RequestParameters:
+              - method.request.header.App-User-Id:
+                  Required: true
+                  Caching: true
+              - method.request.header.App-User-Name:
+                  Required: true
+                  Caching: true
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: true
+        Target: "ES2020"
+        EntryPoints:
+          - functions/get-note.mjs
+        Sourcemap: true
+
+  GetNotesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getNotes
+      CodeUri: notes-api/
+      Handler: functions/get-notes.lambdaHandler
+      Runtime: nodejs22.x
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Events:
+        GetNotesApi:
+          Type: Api
+          Properties:
+            Path: /notes
+            Method: GET
+            RestApiId: !Ref NotesApi
+            RequestParameters:
+              - method.request.header.App-User-Id:
+                  Required: true
+                  Caching: true
+              - method.request.header.App-User-Name:
+                  Required: true
+                  Caching: true
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        Minify: true
+        Target: "ES2020"
+        EntryPoints:
+          - functions/get-notes.mjs
+        Sourcemap: true
+
+  NotesApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: NotesApi
+      StageName: prod
+      TracingEnabled: true
+      Cors:
+        AllowMethods: "'GET,POST,PATCH,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,App-User-Id,App-User-Name'"
+        AllowOrigin: "'*'"
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: NotesApiLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      Policies:
+        - PolicyName: NotesDynamoDBPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Query
+                Resource:
+                  - !GetAtt NotesTable.Arn
+                  - !Sub "${NotesTable.Arn}/index/*"
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${NotesApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
