@@ -5,9 +5,11 @@ phases:
     runtime-versions:
       nodejs: 22
     commands:
+      - echo Installing global esbuild...
+      - npm install -g esbuild
       - echo Installing dependencies...
       - cd notes-api
-      - npm install --also=dev
+      - npm ci
       - cd ..
   build:
     commands:
