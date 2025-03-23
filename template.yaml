@@ -45,7 +45,7 @@ Resources:
     Properties:
       FunctionName: addNote
       CodeUri: notes-api/
-      Handler: functions/add-note.mjs
+      Handler: functions/add-note.lambdaHandler
       Runtime: nodejs22.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Events:
