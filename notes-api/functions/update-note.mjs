@@ -43,13 +43,11 @@ const baseHandler = async (event) => {
     const command = new PutCommand({
         TableName: tableName,
         Item: item,
-        ConditionExpression: '#u = :u AND #t = :t',
+        ConditionExpression: '#t = :t',
         ExpressionAttributeNames: {
-            '#u': 'user_id',
             '#t': 'ts'
         },
         ExpressionAttributeValues: {
-            ':u': item.user_id,
             ':t': item.ts
         }
     });
