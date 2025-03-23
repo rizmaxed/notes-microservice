@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - echo Installing dependencies...
+      - cd notes-api
+      - npm ci
+      - cd ..
+  build:
+    commands:
+      - echo Building SAM application...
+      - sam build
+  post_build:
+    commands:
+      - echo Deploying SAM application...
+      - sam deploy --stack-name notes-microservice --capabilities CAPABILITY_NAMED_IAM --region us-east-1 --no-confirm-changeset --no-fail-on-empty-changeset
+artifacts:
+  files:
+    - "**/*"
