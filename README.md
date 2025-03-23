@@ -1,4 +1,4 @@
-# Notes Microservice · Serverless Application with AWS SAM, CodePipeline & Powertools
+# Notes Microservice - A Production-grade Serverless Notes API
 
 This project demonstrates how to build, deploy, and monitor a **Production-grade Serverless Notes API** using AWS Serverless Application Model (SAM), GitHub-integrated CI/CD pipeline, and AWS observability tooling.
 
