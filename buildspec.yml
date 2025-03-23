@@ -7,7 +7,7 @@ phases:
     commands:
       - echo Installing dependencies...
       - cd notes-api
-      - npm ci
+      - npm install --also=dev
       - cd ..
   build:
     commands:
